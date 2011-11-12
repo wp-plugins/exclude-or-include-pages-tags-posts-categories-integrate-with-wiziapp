@@ -1,6 +1,6 @@
-=== Exclude Include Content ===
+=== Exclude or include Pages, Tags, Posts and Categories (integrate with WiziApp) ===
 Contributors: mayerz
-Tags: Exclude Pages, Tags, Posts and Categories (integrate with WiziApp)
+Tags: pages, posts, categories, tags, exclude, exclude pages, exclude posts, exclude categories, exclude tags, hide
 Requires at least: 2.8
 Tested up to: 3.2.1
 Stable tag: 1.0.0
