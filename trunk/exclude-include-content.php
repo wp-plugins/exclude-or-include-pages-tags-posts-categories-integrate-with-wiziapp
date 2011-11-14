@@ -201,45 +201,53 @@ class EIContent_Controller {
 		return $query_request;
 	}
 
-	public function exclude_tags( array $args) {
-		$query = $this->_model->set_query( 'post_tag' );
-		$args['exclude'] = $this->_db->get_col( $query );
+	public function exclude_tags($args) {
+		if ( is_array( $args ) ) {
+			$query = $this->_model->set_query( 'post_tag' );
+			$args['exclude'] = $this->_db->get_col( $query );
+		}
 
 		return $args;
 	}
 
-	public function exclude_categories( array $args) {
-		$query = $this->_model->set_query( 'category' );
-		$args['exclude'] = $this->_db->get_col( $query );
+	public function exclude_categories($args) {
+		if ( is_array( $args ) ) {
+			$query = $this->_model->set_query( 'category' );
+			$args['exclude'] = $this->_db->get_col( $query );
+		}
 
 		return $args;
 	}
 
-	public function fix_amount_error( stdClass $end_result_term) {
-		$actual_taxonomy = array( 'category', 'post_tag', );
-		if ( $this->_model->is_wiziapp_request() ) {
-			if ( isset( $end_result_term->term_id ) && isset( $end_result_term->taxonomy ) ) {
-				if ( in_array( $end_result_term->taxonomy, $actual_taxonomy)) {
-					$count = intval( $end_result_term->count ) - $this->_model->get_posts_count( $end_result_term->term_id );
-					$end_result_term->count = sprintf( '%s', ( $count > 0 ) ? $count : 0 );
-				}
-			}
+	public function fix_amount_error($end_result_term) {
+		$condition =
+		$this->_model->is_wiziapp_request() &&
+		is_object($end_result_term) &&
+		isset( $end_result_term->term_id )&&
+		isset( $end_result_term->taxonomy )&&
+		in_array( $end_result_term->taxonomy, array( 'category', 'post_tag', ) );
+
+		if ( $condition	) {
+			$count = intval( $end_result_term->count ) - $this->_model->get_posts_count( $end_result_term->term_id );
+			$end_result_term->count = sprintf( '%s', ( $count > 0 ) ? $count : 0 );
 		}
 
 		return $end_result_term;
 	}
 
-	public function exclude_wiziapp_push( stdClass $post) {
-		if ( isset( $post->ID ) && $this->_model->is_excluded_exist( $post->ID ) ) {
+	public function exclude_wiziapp_push($post) {
+		if ( is_object($post) && isset( $post->ID ) && $this->_model->is_excluded_exist( $post->ID ) ) {
 			return NULL;
 		}
 
 		return $post;
 	}
 
-	public function fix_amount_errors( array $end_result_terms) {
-		foreach ( $end_result_terms as $object ) {
-			$this->fix_amount_error( $object );
+	public function fix_amount_errors($end_result_terms) {
+		if ( is_array( $end_result_terms ) ) {
+			foreach ( $end_result_terms as $object ) {
+				$this->fix_amount_error( $object );
+			}
 		}
 
 		return $end_result_terms;
