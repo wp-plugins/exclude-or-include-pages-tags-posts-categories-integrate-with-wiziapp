@@ -13,6 +13,7 @@ Exclude pages, tags & categories only by Uncheck the 'Display on your web site' 
 This plugin adds a checkbox, “Display on your web site”, to your Pages, Tags and categories, which is checked by default.
 In order to exclude Page or Tag or category, just uncheck the checkbox and users will not see this content in your web site.
 In order to exclude a post, create a Tag named for example “Exclude from website” uncheck the “Display on your web site” checkbox and add this tag to the posts you would like to exclude.
+
 This plugin is also integrated with your Wiziapp (link:www.wiziapp.com) powered native iphone App.
 For this purpose the plugin displays an additional checkbox named “Exclude from your iphone App”.
 You can uncheck the “Display on your iphone App” checkbox and this content will not be displayed on the App, but will still be displayed on your Web site.
