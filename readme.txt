@@ -3,7 +3,7 @@ Contributors: mayerz
 Tags: pages, posts, categories, tags, exclude, exclude pages, exclude posts, exclude categories, exclude tags, hide
 Requires at least: 2.8
 Tested up to: 3.2.1
-Stable tag: 1.0.1
+Stable tag: 1.0.3
 License: GPLv2
 
 Exclude pages, tags & categories only by Uncheck the "Display on your web site" checkbox, Use an excluded Tag to exclude Posts.
@@ -39,3 +39,6 @@ This can be done by uncheck the "Display on your web site" and keeping the "Disp
 
 = 1.0.1 =
 * Bug fix.
+
+= 1.0.2 =
+* New feature "Exclude Links".
