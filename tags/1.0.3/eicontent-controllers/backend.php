@@ -31,6 +31,8 @@ class EIContent_Backend {
 	*/
 	private $_tables_array = array( 'posts', 'terms', 'links', );
 
+	private $_is_deactivation = TRUE;
+
 	/**
 	* Set _db and _model properties.
 	* Activate activation and unactivation hooks.
@@ -54,12 +56,6 @@ class EIContent_Backend {
 	public function activate() {
 		try {
 			foreach ( $this->_tables_array as $table ) {
-				if ($table === 'posts') {
-					if ( defined('WP_WIZIAPP_BASE') && is_plugin_active( WP_WIZIAPP_BASE ) ) {
-						continue;
-					}
-				}
-
 				// Check, if Exclude Include Content plugin columns not exists already
 				$columns_names = $this->_db->get_col( "SHOW COLUMNS FROM `" . $this->_db->$table . "`" );
 				if ( in_array( 'wizi_included_site', $columns_names ) || in_array( 'wizi_included_app', $columns_names ) ) {
@@ -71,6 +67,7 @@ class EIContent_Backend {
 				"ALTER TABLE `" . $this->_db->$table . "`" .
 				"ADD COLUMN `wizi_included_site` TINYINT(1) UNSIGNED DEFAULT '1' NOT NULL COMMENT 'Is Post included to Site', " .
 				"ADD COLUMN `wizi_included_app`  TINYINT(1) UNSIGNED DEFAULT '1' NOT NULL COMMENT 'Is Post included to WiziApp';";
+
 				if ( ! $this->_db->query( $sql ) ) {
 					$message = 'Activation failed, creating new columns in the ' . $this->_db->$table . ' problem. ' . $this->_db->last_error . '.';
 					throw new Exception($message);
@@ -78,10 +75,13 @@ class EIContent_Backend {
 			}
 		} catch (Exception $e) {
 			// If error happened, remove added columns
-			$this->deactivate( FALSE );
+			$this->_is_deactivation = FALSE;
+			$this->deactivate();
+
 			echo
 			'<script type="text/javascript">alert("' . $e->getMessage() . '")</script>' . PHP_EOL .
 			$e->getMessage();
+
 			exit;
 		}
 	}
@@ -94,14 +94,12 @@ class EIContent_Backend {
 	* @param bool Optional, default - FALSE. Is the Exclude Include Content plugin not activated yet.
 	* @return void
 	*/
-	public function deactivate($is_deactivation = TRUE) {
+	public function deactivate() {
 		$message = array();
 		$is_successful = TRUE;
 		foreach ( $this->_tables_array as $table ) {
-			if ($table === 'posts') {
-				if ( defined('WP_WIZIAPP_BASE') && is_plugin_active( WP_WIZIAPP_BASE ) ) {
-					continue;
-				}
+			if ( $table === 'posts' && defined('WP_WIZIAPP_BASE') && is_plugin_active( WP_WIZIAPP_BASE ) ) {
+				continue;
 			}
 
 			$columns_names = $this->_db->get_col( "SHOW COLUMNS FROM `" . $this->_db->$table . "`", 0 );
@@ -117,7 +115,7 @@ class EIContent_Backend {
 			}
 		}
 
-		if ( ! $is_successful && $is_deactivation ) {
+		if ( ! $is_successful && $this->_is_deactivation ) {
 			echo
 			'<script type="text/javascript">alert("' . 'Deactivation failed, ' . implode(' ', $message) . '")</script>' . PHP_EOL .
 			'Deactivation failed,<br />' . implode('<br />', $message);

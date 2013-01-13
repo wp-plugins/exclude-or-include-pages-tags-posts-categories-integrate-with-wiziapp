@@ -40,7 +40,7 @@ class EIContent_Route {
 	*/
 	public function site_init() {
 		/*************	Exclude Pages and Posts unchecked to be shown	**********/
-		add_filter( 'get_pages', array( $this->_controller, 'exclude_pages' ) );
+		add_filter( 'get_pages', 	 array( $this->_controller, 'exclude_pages' ) );
 		add_action( 'pre_get_posts', array( $this->_controller, 'exclude_posts' ) );
 
 		/*************	Exclude Categories, Tags and Links, appurtenants to Links Category unchecked, to be shown	**********/
