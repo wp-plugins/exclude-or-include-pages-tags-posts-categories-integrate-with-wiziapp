@@ -102,7 +102,7 @@ class EIContent_Model {
 	}
 
 	public function is_wiziapp_request() {
-		return class_exists( 'WiziappContentHandler' ) && WiziappContentHandler::getInstance()->isInApp();
+		return class_exists( 'WiziappContentHandler' ) && ( WiziappContentHandler::getInstance()->isInApp() || WiziappContentHandler::getInstance()->isHTML() );
 	}
 
 }
