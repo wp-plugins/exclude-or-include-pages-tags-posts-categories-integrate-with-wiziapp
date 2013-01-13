@@ -20,6 +20,8 @@ You can uncheck the "Display on your iphone App" checkbox and this content will 
 It is also enable you to include the only on your Wiziapp [Wiziapp](http://www.wiziapp.com/) iphone app.
 This can be done by uncheck the "Display on your web site" and keeping the "Display on your iphone App" checked.
 
+![Alt Pix](http://affiliate.wiziapp.com/pap_4.5.73.10/accounts/default1/banners/Pix.png)
+
 == Installation ==
 
 1. Upload the whole plugin folder to the /wp-content/plugins/ folder.
