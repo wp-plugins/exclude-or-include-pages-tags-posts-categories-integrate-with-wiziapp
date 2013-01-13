@@ -98,11 +98,8 @@ class EIContent_Backend {
 		$message = array();
 		$is_successful = TRUE;
 		foreach ( $this->_tables_array as $table ) {
-			if ( $table === 'posts' && defined('WP_WIZIAPP_BASE') && is_plugin_active( WP_WIZIAPP_BASE ) ) {
-				continue;
-			}
-
 			$columns_names = $this->_db->get_col( "SHOW COLUMNS FROM `" . $this->_db->$table . "`", 0 );
+
 			foreach ( array( 'wizi_included_site', 'wizi_included_app', ) as $column ) {
 				if ( in_array( $column, $columns_names ) ) {
 					// If Exclude Include Content plugin column exist...
