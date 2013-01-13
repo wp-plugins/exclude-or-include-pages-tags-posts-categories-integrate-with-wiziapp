@@ -1,9 +1,9 @@
 === Exclude or include Pages, Tags, Posts and Categories (integrate with WiziApp) ===
 Contributors: mayerz
 Tags: pages, posts, categories, tags, exclude, exclude pages, exclude posts, exclude categories, exclude tags, hide
-Requires at least: 2.8
+Requires at least: 3.2
 Tested up to: 3.2.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2
 
 Exclude pages, tags & categories only by Uncheck the "Display on your web site" checkbox, Use an excluded Tag to exclude Posts.
