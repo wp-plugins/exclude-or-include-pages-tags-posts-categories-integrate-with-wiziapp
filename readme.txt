@@ -48,7 +48,7 @@ Installing the "Exclude or include Pages, Tags, Posts and Categories" Plugin fro
 = 1.0.1 =
 * Bug fix.
 
-1.0.2 =
+= 1.0.2 =
 * New feature "Exclude Links".
 
 = 1.0.3 =
