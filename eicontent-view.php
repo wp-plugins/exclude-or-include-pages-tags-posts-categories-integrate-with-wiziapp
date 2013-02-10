@@ -11,7 +11,7 @@
 		<div>
 			<input type="hidden" name="wiziapp_ctrl_present" />
 			<input type="checkbox" name="wizi_included_app" <?php echo $checked_array['wizi_included_app']; ?> />
-			Display on your <a href="http://www.wiziapp.com/">iPhone App</a>
+			Display on your <a href="http://www.wiziapp.com/">mobile App</a>
 		</div></br>
 		<?php
 		}
