@@ -58,3 +58,4 @@ Installing the "Exclude or include Pages, Tags, Posts and Categories" Plugin fro
 * Bug fix.
 
 = 1.0.5 =
+* Adding compatibility with the Wiziapp plugin HTML5 mobile webapp & Android App.
