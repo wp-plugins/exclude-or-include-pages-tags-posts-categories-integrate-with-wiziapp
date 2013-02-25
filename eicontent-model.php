@@ -45,7 +45,7 @@ class EIContent_Model {
 
 	public function is_excluded_exist($object_id) {
 		$query =
-		"SELECT `" . $this->_db->terms . "`.`term_id " .
+		"SELECT `" . $this->_db->terms . "`.`term_id` " .
 		"FROM `" . $this->_db->terms . "`, `" . $this->_db->term_taxonomy . "`, `" . $this->_db->term_relationships . "` " .
 		"WHERE `" . $this->_db->terms . "`.`term_id` = `" . $this->_db->term_taxonomy . "`.`term_id` " .
 		"AND `" . $this->_db->term_taxonomy . "`.`term_taxonomy_id` = `" . $this->_db->term_relationships . "`.`term_taxonomy_id` " .
