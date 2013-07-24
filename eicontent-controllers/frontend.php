@@ -49,28 +49,26 @@ class EIContent_Frontend {
 	* @return object of the Pages objects filtered
 	*/
 	public function exclude_posts($query_request) {
-		foreach ( array( 'category' => 'category', 'post_tag' => 'tag',) as $key => $value ) {
-			$query = $this->_model->set_query( $key );
-			$query_request->set( $value . '__not_in', $this->_db->get_col( $query ) );
-		}
+		$posts = $this->_model->get_posts_excluded();
+		$query_request->set( 'post__not_in', $posts );
 
 		return $query_request;
 	}
 
 	public function exclude_categories($args) {
-		return $this->_exclude_elements( $args, 'category' );
+		return $this->_exclude_elements( $args, $this->_model->get_tax_items( array( 'category',) ) );
 	}
 
 	public function exclude_tags($args) {
-		return $this->_exclude_elements( $args, 'post_tag' );
+		return $this->_exclude_elements( $args, $this->_model->get_tax_items( array( 'tags', ) ) );
 	}
 
 	public function exclude_links_categories($args) {
-		return $this->_exclude_elements( $args, 'link_category' );
+		return $this->_exclude_elements( $args, array( 'link_category', ) );
 	}
 
 	public function exclude_links($args) {
-		return $this->_exclude_elements( $args, 'link' );
+		return $this->_exclude_elements( $args, array( 'link', ) );
 	}
 
 	public function exclude_wiziapp_links($links_categories, $taxonomies, $args) {
@@ -96,7 +94,7 @@ class EIContent_Frontend {
 		is_object($end_result_term) &&
 		isset( $end_result_term->term_id )&&
 		isset( $end_result_term->taxonomy )&&
-		in_array( $end_result_term->taxonomy, array( 'category', 'post_tag', ) );
+		in_array( $end_result_term->taxonomy, $this->_model->get_tax_items( array( 'category', 'tags', ) ) );
 
 		if ( $condition	) {
 			$count = intval( $end_result_term->count ) - $this->_model->get_posts_count( $end_result_term->term_id );
@@ -136,19 +134,27 @@ class EIContent_Frontend {
 	}
 
 	private function _exclude_elements($array_arguments, $taxonomy) {
-		if ( is_array( $array_arguments ) && in_array( $taxonomy, array( 'category', 'post_tag', 'link_category', 'link', ) ) ) {
-			$query = $this->_model->set_query( $taxonomy );
+		$taxonomy_exist = array_merge( array( 'link_category', 'link', ), $this->_model->get_tax_items( array( 'category', 'tags', ) ) );
 
-			if ( $taxonomy === 'link_category' ) {
-				$array_arguments['exclude_category'] = implode( ',', $this->_db->get_col( $query ) );
-			} elseif ( $taxonomy === 'link' ) {
-				$array_arguments['exclude'] = implode( ',', $this->_db->get_col( $query ) );
-			} else {
-				$array_arguments['exclude'] = $this->_db->get_col( $query );
+		if ( ! is_array( $array_arguments ) || ! is_array( $taxonomy ) ) {
+			return $array_arguments;
+		}
+		foreach ( $taxonomy as $item ) {
+			if ( ! in_array( $item, $taxonomy_exist ) ) {
+				return $array_arguments;
 			}
+		}
+
+		$query = $this->_model->set_query( $taxonomy );
+
+		if ( $taxonomy === array( 'link_category', ) ) {
+			$array_arguments['exclude_category'] = implode( ',', $this->_db->get_col( $query ) );
+		} elseif ( $taxonomy === array( 'link', ) ) {
+			$array_arguments['exclude'] = implode( ',', $this->_db->get_col( $query ) );
+		} else {
+			$array_arguments['exclude'] = $this->_db->get_col( $query );
 		}
 
 		return $array_arguments;
 	}
-
 }
