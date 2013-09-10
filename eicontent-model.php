@@ -32,14 +32,14 @@ class EIContent_Model {
 			"SELECT `link_id` " .
 			"FROM `" . $this->_db->links . "` " .
 			"WHERE `" . $this->get_element_column() . "` = 0;";
-		} else {
-			return
-			"SELECT `" . $this->_db->terms . "`.`term_id` " .
-			"FROM `" . $this->_db->terms . "`, `" . $this->_db->term_taxonomy . "` " .
-			"WHERE `" . $this->_db->terms . "`.`term_id` = `" . $this->_db->term_taxonomy . "`.`term_id` " .
-			"AND `" . $this->_db->term_taxonomy . "`.`taxonomy` IN (" . self::_convert_to_string($element_name) . ") " .
-			"AND `" . $this->_db->terms . "`.`" . $this->get_element_column() . "` = 0;";
 		}
+
+		return
+		"SELECT `" . $this->_db->terms . "`.`term_id` " .
+		"FROM `" . $this->_db->terms . "`, `" . $this->_db->term_taxonomy . "` " .
+		"WHERE `" . $this->_db->terms . "`.`term_id` = `" . $this->_db->term_taxonomy . "`.`term_id` " .
+		"AND `" . $this->_db->term_taxonomy . "`.`taxonomy` IN (" . self::_convert_to_string($element_name) . ") " .
+		"AND `" . $this->_db->terms . "`.`" . $this->get_element_column() . "` = 0;";
 	}
 
 	public function get_posts_excluded() {
@@ -49,13 +49,13 @@ class EIContent_Model {
 		"WHERE `" . $this->_db->terms . "`.`term_id` = `" . $this->_db->term_taxonomy . "`.`term_id` " .
 		"AND `" . $this->_db->term_taxonomy . "`.`term_taxonomy_id` = `" . $this->_db->term_relationships . "`.`term_taxonomy_id` " .
 		"AND `" . $this->_db->term_taxonomy . "`.`taxonomy` IN (" . $this->get_tax_items( array( 'category', 'tags', ), FALSE ) . ") " .
-		"AND `" . $this->_db->terms . "`.`wizi_included_app` = 0;";
+		"AND `" . $this->_db->terms . "`.`" . $this->get_element_column() . "` = 0;";
 
 		return $this->_db->get_col( $query );
 	}
 
 	public function get_all_excluded() {
-		$pages_exclude = $this->_db->get_col( "SELECT `ID` FROM `" . $this->_db->posts . "` WHERE `wizi_included_app` = 0 AND `post_type` = 'page';" );
+		$pages_exclude = $this->_db->get_col( "SELECT `ID` FROM `" . $this->_db->posts . "` WHERE `" . $this->get_element_column() . "` = 0 AND `post_type` = 'page';" );
 
 		return array_merge( $pages_exclude + $this->get_posts_excluded() );
 	}
@@ -67,7 +67,7 @@ class EIContent_Model {
 		"WHERE `" . $this->_db->terms . "`.`term_id` = `" . $this->_db->term_taxonomy . "`.`term_id` " .
 		"AND `" . $this->_db->term_taxonomy . "`.`term_taxonomy_id` = `" . $this->_db->term_relationships . "`.`term_taxonomy_id` " .
 		"AND `" . $this->_db->term_taxonomy . "`.`taxonomy` IN (" . $this->get_tax_items( array( 'category', 'tags', ), FALSE ) . ") " .
-		"AND `" . $this->_db->terms . "`.`wizi_included_app` = 0 " .
+		"AND `" . $this->_db->terms . "`.`" . $this->get_element_column() . "` = 0 " .
 		"AND `" . $this->_db->term_relationships . "`.`object_id` = " . intval( $object_id );
 
 		return ( bool ) $this->_db->query( $query );
@@ -102,11 +102,11 @@ class EIContent_Model {
 
 	public function update_element_exclusion($table_name, $id_array) {
 		$this->_db->update(
-		$this->_db->$table_name,
-		array( 'wizi_included_site' => isset( $_POST['wizi_included_site'] ), 'wizi_included_app'  => isset( $_POST['wizi_included_app'] ), ),
-		$id_array,
-		array( '%d', '%d' ),
-		array( '%d' )
+			$this->_db->$table_name,
+			array( 'wizi_included_site' => isset( $_POST['wizi_included_site'] ), 'wizi_included_app'  => isset( $_POST['wizi_included_app'] ), ),
+			$id_array,
+			array( '%d', '%d' ),
+			array( '%d' )
 		);
 	}
 
