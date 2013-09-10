@@ -1,9 +1,9 @@
 === Exclude Pages, Tags, Posts, Links & Categories (integrate with WiziApp powered mobile Apps) ===
 Contributors: mayerz
 Tags: categories, links, exclude, exclude categories, exclude pages, exclude posts, exclude tags, hide, pages, posts, tags, exclude links
-Requires at least: 3.2
-Tested up to: 3.2.1
-Stable tag: 1.0.6
+Requires at least: 3.3
+Tested up to: 3.5
+Stable tag: 1.0.7
 License: GPLv2
 
 Exclude pages, tags, links & categories by un checking the the "Display on your web site" checkbox, Use an excluded Tag to exclude Posts
@@ -30,7 +30,7 @@ Installing the "Exclude or include Pages, Tags, Posts and Categories" Plugin fro
 
 1. Go to the "Plugins" / "Add new" on the left main menu.
 2. Type "Exclude or include Pages, Tags, Posts and Categories" within the search box and click "Search Plugins".
-3. Choose the "Exclude or include Pages, Tags, Posts and Categories” Plugin and click "Install Now".
+3. Choose the "Exclude or include Pages, Tags, Posts and Categories" Plugin and click "Install Now".
 4. Click "Activate Plugin".
 
 == Screenshots ==
@@ -41,6 +41,9 @@ Installing the "Exclude or include Pages, Tags, Posts and Categories" Plugin fro
 4. Add New Category page of the Admin panel with Exclude Include Content plugin checkboxes.
 
 == Changelog ==
+
+= 1.0.7 =
+* Bug Fixes.
 
 = 1.0.6 =
 * Adding a Custom Post Types support.

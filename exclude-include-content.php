@@ -1,9 +1,9 @@
 <?php
 /**
 * Plugin Name: Exclude or include Pages, Tags, Posts & Categories (integrate with WiziApp)
-* Description: This plugin adds a checkbox, “Display on your web site”, for pages, tags & categories. Uncheck it to exclude content from your web site. Use Tags to uncheck Posts too.
+* Description: This plugin adds a checkbox, "Display on your web site", for pages, tags & categories. Uncheck it to exclude content from your web site. Use Tags to uncheck Posts too.
 * Author: mayerz.
-* Version: 1.0.6
+* Version: 1.0.7
 */
 
 class EIContent_Route {
