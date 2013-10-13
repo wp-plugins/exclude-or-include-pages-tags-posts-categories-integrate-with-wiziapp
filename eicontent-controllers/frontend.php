@@ -49,8 +49,11 @@ class EIContent_Frontend {
 	* @return object of the Pages objects filtered
 	*/
 	public function exclude_posts($query_request) {
+		$query_vars   = isset($query_request->query_vars)  ? $query_request->query_vars  : array();
+		$post__not_in = isset($query_vars['post__not_in']) ? $query_vars['post__not_in'] : array();
+
 		$posts = $this->_model->get_posts_excluded();
-		$query_request->set( 'post__not_in', $posts );
+		$query_request->set( 'post__not_in', array_merge($post__not_in, $posts) );
 
 		return $query_request;
 	}
