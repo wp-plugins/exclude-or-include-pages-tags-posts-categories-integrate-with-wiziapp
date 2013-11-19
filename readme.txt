@@ -10,6 +10,8 @@ Exclude pages, tags, links & categories by un checking the the "Display on your 
 
 == Description ==
 
+This plugin enables you to exclude content from your desktop website or from your WiziApp powered mobile Apps. Use this plugin for publishing content exclusively to your mobile and/or desktop visitors.
+
 This plugin adds a checkbox, "Display on your website" to your Pages, Tags, Links and Categories, which is checked by default.
 
 In order to exclude a Page or a Tag or a Category or a Link from your website, just uncheck the checkbox and users will not see this content in your web site.
