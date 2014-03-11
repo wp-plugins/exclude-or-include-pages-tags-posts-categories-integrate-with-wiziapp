@@ -14,6 +14,10 @@ class EIContent_Model {
 		$this->_excluded_ids_array = $element_name;
 	}
 
+	public function get_excluded_ids() {
+		return $this->_excluded_ids_array;
+	}
+
 	public function get_tax_items( array $items_names, $as_array = TRUE) {
 		$this->_tax_items_names = $items_names;
 
@@ -93,7 +97,7 @@ class EIContent_Model {
 	}
 
 	public function get_element_column() {
-		if ( $this->is_wiziapp_request() ) {
+		if ( $this->is_mobile_device() ) {
 			return 'wizi_included_app';
 		} else {
 			return 'wizi_included_site';
@@ -110,7 +114,7 @@ class EIContent_Model {
 		);
 	}
 
-	public function exclude_posts($page) {
+	public function exclude_posts_ids($page) {
 		return ! in_array( $page->ID, $this->_excluded_ids_array );
 	}
 
@@ -118,8 +122,40 @@ class EIContent_Model {
 		return ! in_array( $media['content_id'], $this->_excluded_ids_array );
 	}
 
-	public function is_wiziapp_request() {
-		return class_exists( 'WiziappContentHandler' ) && ( WiziappContentHandler::getInstance()->isInApp() || WiziappContentHandler::getInstance()->isHTML() );
+	public function is_mobile_device() {
+		if ( $this->_is_native_iphone_app() ) {
+			return true;
+		}
+
+		if ( empty($_SERVER['HTTP_USER_AGENT']) ) {
+			return false;
+		}
+
+		$is_iPhone		= stripos($_SERVER['HTTP_USER_AGENT'], 'iPhone')  !== FALSE && stripos($_SERVER['HTTP_USER_AGENT'], 'Mac OS X')	   !== FALSE;
+		$is_iPod		= stripos($_SERVER['HTTP_USER_AGENT'], 'iPod')    !== FALSE && stripos($_SERVER['HTTP_USER_AGENT'], 'Mac OS X')	   !== FALSE;
+		$is_android_web	= stripos($_SERVER['HTTP_USER_AGENT'], 'Android') !== FALSE && stripos($_SERVER['HTTP_USER_AGENT'], 'AppleWebKit') !== FALSE;
+		$is_android_app = $_SERVER['HTTP_USER_AGENT'] === '72dcc186a8d3d7b3d8554a14256389a4';
+		$is_windows		= stripos($_SERVER['HTTP_USER_AGENT'], 'Windows') !== FALSE && stripos($_SERVER['HTTP_USER_AGENT'], 'IEMobile')	   !== FALSE && stripos($_SERVER['HTTP_USER_AGENT'], 'Phone') !== FALSE;
+		$is_iPad		= stripos($_SERVER['HTTP_USER_AGENT'], 'iPad')    !== FALSE || stripos($_SERVER['HTTP_USER_AGENT'], 'webOS') 	   !== FALSE;
+
+		if ( $is_iPad || $is_iPhone || $is_iPod || $is_android_web || $is_android_app || $is_windows) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private function _is_native_iphone_app() {
+		if ( ! class_exists('WiziappContentHandler') ) {
+			return false;
+		}
+
+		$wiziapp_content_handler = WiziappContentHandler::getInstance();
+		if ( ! $wiziapp_content_handler->isInApp() ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private function _filter_tags($taxonomy) {

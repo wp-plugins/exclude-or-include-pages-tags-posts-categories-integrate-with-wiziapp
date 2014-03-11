@@ -3,7 +3,7 @@
 * Plugin Name: Exclude or include Pages, Tags, Posts & Categories (integrate with WiziApp)
 * Description: This plugin adds a checkbox, "Display on your web site", for pages, tags & categories. Uncheck it to exclude content from your web site. Use Tags to uncheck Posts too.
 * Author: mayerz.
-* Version: 1.0.8
+* Version: 1.0.9
 */
 
 class EIContent_Route {
@@ -43,19 +43,23 @@ class EIContent_Route {
 		add_filter( 'get_pages', 	 array( $this->_controller, 'exclude_pages' ) );
 		add_action( 'pre_get_posts', array( $this->_controller, 'exclude_posts' ) );
 
-		/*************	Exclude Categories, Tags and Links, appurtenants to Links Category unchecked, to be shown	**********/
+		/*************	Exclude Categories, Tags and Links, appurtenant to Links Category unchecked, to be shown	**********/
 		// Exclude unchecked Categories to be shown on Site and Application
-		add_filter( 'widget_categories_args',     array( $this->_controller, 'exclude_categories' ) );
-		add_filter( 'wiziapp_exclude_categories', array( $this->_controller, 'exclude_categories' ) );
+		add_filter( 'get_terms_args',				array( $this->_controller, 'exclude_categories' ), 10, 2 );
+		add_filter( 'widget_categories_args',     	array( $this->_controller, 'exclude_categories' ) );
+		add_filter( 'wiziapp_exclude_categories',	array( $this->_controller, 'exclude_categories' ) );
 		// Exclude unchecked Tags to be shown on Site and Application
-		add_filter( 'widget_tag_cloud_args',      array( $this->_controller, 'exclude_tags' ) );
-		add_filter( 'wiziapp_exclude_tags',  	  array( $this->_controller, 'exclude_tags' ) );
-		// Exclude unchecked Links to be shown on the Site
-		add_filter( 'widget_links_args', 		  array( $this->_controller, 'exclude_links' ) );
-		// Exclude Links, appurtenants to Links Category unchecked, to be shown on the Site
-		add_filter( 'widget_links_args', 		  array( $this->_controller, 'exclude_links_categories' ) );
-		// Exclude Links, appurtenants to Links Category unchecked, to be shown on the Application
-		add_filter( 'get_terms', 				  array( $this->_controller, 'exclude_wiziapp_links' ), 10, 3 );
+		add_filter( 'get_terms_args', 			  	array( $this->_controller, 'exclude_tags' ), 10, 2 );
+		add_filter( 'widget_tag_cloud_args',      	array( $this->_controller, 'exclude_tags' ) );
+		add_filter( 'wiziapp_exclude_tags',  	  	array( $this->_controller, 'exclude_tags' ) );
+		// Exclude unchecked Links to be shown on Site and Application
+		add_filter( 'get_terms_args', 				array( $this->_controller, 'exclude_links' ), 10, 2 );
+		add_filter( 'widget_links_args', 		  	array( $this->_controller, 'exclude_links' ) );
+		add_filter( 'wiziapp_mobile_get_bookmarks', array( $this->_controller, 'exclude_links' ) );
+		// Exclude Links, appurtenant to Links Category unchecked, to be shown on the Application
+		add_filter( 'get_terms_args', 			  	array( $this->_controller, 'exclude_mobile_links_categories' ), 10, 2 );
+		// Exclude Links, appurtenant to Links Category unchecked, to be shown on the Site
+		add_filter( 'widget_links_args', 		  	array( $this->_controller, 'exclude_desktop_links_categories' ) );
 
 		/*************	Fix amount error in Categories and Tags, shown on the Application   **********/
 		add_filter( 'get_term',  array( $this->_controller, 'fix_amount_error' ) );
@@ -98,9 +102,8 @@ class EIContent_Route {
 		add_action( 'edit_link', array( $this->_controller, 'update_link_exclusion' ) );
 
 		/*************	Avoid "Wiziapp Push", in element unchecked case	**********/
-		add_filter( 'exclude_wiziapp_push', array( $this->_controller, 'exclude_wiziapp_push' ) );
+		// add_filter( 'exclude_wiziapp_push', array( $this->_controller, 'exclude_wiziapp_push' ) );
 	}
-
 }
 
 // Make sure we don't expose any info if called directly
@@ -111,7 +114,7 @@ if ( ! function_exists( 'add_action' ) ) {
 if ( ! defined( 'EICONTENT_EXCLUDE_PATH' ) ) {
 	define( 'EICONTENT_EXCLUDE_PATH', 	  plugin_dir_path( __FILE__ ) );
 	define( 'EICONTENT_EXCLUDE_BASENAME', plugin_basename( __FILE__ ) );
- 	/** @define "EICONTENT_EXCLUDE_PATH" "D:/localhost/wiziapp/apptelecom.com/public/blogtest1/wp-content/plugins/exclude-or-include-pages-tags-posts-categories-integrate-with-wiziapp/" */
+	/** @define "EICONTENT_EXCLUDE_PATH" "D:/localhost/wiziapp/apptelecom.com/public/blogtest1/wp-content/plugins/exclude-or-include-pages-tags-posts-categories-integrate-with-wiziapp/" */
 	require EICONTENT_EXCLUDE_PATH . 'eicontent-controllers' . DIRECTORY_SEPARATOR . 'frontend.php';
 	require EICONTENT_EXCLUDE_PATH . 'eicontent-controllers' . DIRECTORY_SEPARATOR . 'backend.php';
 	require EICONTENT_EXCLUDE_PATH . 'eicontent-model.php';

@@ -36,7 +36,7 @@ class EIContent_Frontend {
 		$query = "SELECT `ID` FROM `" . $this->_db->posts . "` WHERE `" . $this->_model->get_element_column() . "` = 0 AND `post_type` = 'page';";
 		$this->_model->set_excluded_ids( $this->_db->get_col( $query ) );
 
-		return array_filter( $pages, array( $this->_model, 'exclude_posts' ) );
+		return array_filter( $pages, array( $this->_model, 'exclude_posts_ids' ) );
 	}
 
 	/**
@@ -52,48 +52,57 @@ class EIContent_Frontend {
 		$query_vars   = isset($query_request->query_vars)  ? $query_request->query_vars  : array();
 		$post__not_in = isset($query_vars['post__not_in']) ? $query_vars['post__not_in'] : array();
 
-		$posts = $this->_model->get_posts_excluded();
+		if ( isset($query_vars['post_type']) && $query_vars['post_type'] === 'page' ) {
+			$query = "SELECT `ID` FROM `" . $this->_db->posts . "` WHERE `" . $this->_model->get_element_column() . "` = 0 AND `post_type` = 'page';";
+			$this->_model->set_excluded_ids( $this->_db->get_col( $query ) );
+			$posts = $this->_model->get_excluded_ids();
+		} else {
+			$posts = $this->_model->get_posts_excluded();
+		}
 		$query_request->set( 'post__not_in', array_merge($post__not_in, $posts) );
 
 		return $query_request;
 	}
 
-	public function exclude_categories($args) {
+	public function exclude_categories( $args, $taxonomies = array( 'category', ) ) {
+		if ( $taxonomies != array( 'category', ) ) {
+			return $args;
+		}
+
 		return $this->_exclude_elements( $args, $this->_model->get_tax_items( array( 'category',) ) );
 	}
 
-	public function exclude_tags($args) {
+	public function exclude_tags( $args, $taxonomies = array( 'post_tag', ) ) {
+		if ( $taxonomies != array( 'post_tag', ) ) {
+			return $args;
+		}
+
 		return $this->_exclude_elements( $args, $this->_model->get_tax_items( array( 'tags', ) ) );
 	}
 
-	public function exclude_links_categories($args) {
+	public function exclude_desktop_links_categories($args) {
+		return $this->_exclude_elements( $args, array( 'link_category', ), true );
+	}
+
+	public function exclude_mobile_links_categories($args, $taxonomies ) {
+		if ( $taxonomies != array( 'link_category', ) ) {
+			return $args;
+		}
+
 		return $this->_exclude_elements( $args, array( 'link_category', ) );
 	}
 
-	public function exclude_links($args) {
-		return $this->_exclude_elements( $args, array( 'link', ) );
-	}
-
-	public function exclude_wiziapp_links($links_categories, $taxonomies, $args) {
-		if ( $this->_model->is_wiziapp_request() && is_array( $links_categories ) && $taxonomies[0] === 'link_category' ) {
-			$links_categories_filtered = array();
-
-			foreach ( $links_categories as $links_category ) {
-				if ( ( is_object( $links_category) && isset( $links_category->wizi_included_app ) && $links_category->wizi_included_app === '0' ) ) {
-					continue;
-				}
-				$links_categories_filtered[] = $links_category;
-			}
-
-			return $links_categories_filtered;
+	public function exclude_links( $args, $taxonomies = array( 'link', ) ) {
+		if ( $taxonomies != array( 'link', ) ) {
+			return $args;
 		}
 
-		return $links_categories;
+		return $this->_exclude_elements( $args, array( 'link', ) );
 	}
 
 	public function fix_amount_error($end_result_term) {
 		$condition =
-		$this->_model->is_wiziapp_request() &&
+		$this->_model->is_mobile_device() &&
 		is_object($end_result_term) &&
 		isset( $end_result_term->term_id )&&
 		isset( $end_result_term->taxonomy )&&
@@ -136,7 +145,7 @@ class EIContent_Frontend {
 		return array_filter( $media, array( $this->_model, 'exclude_media' ) );
 	}
 
-	private function _exclude_elements($array_arguments, $taxonomy) {
+	private function _exclude_elements($array_arguments, $taxonomy, $is_different_key = false) {
 		$taxonomy_exist = array_merge( array( 'link_category', 'link', ), $this->_model->get_tax_items( array( 'category', 'tags', ) ) );
 
 		if ( ! is_array( $array_arguments ) || ! is_array( $taxonomy ) ) {
@@ -149,14 +158,11 @@ class EIContent_Frontend {
 		}
 
 		$query = $this->_model->set_query( $taxonomy );
-
-		if ( $taxonomy === array( 'link_category', ) ) {
-			$array_arguments['exclude_category'] = implode( ',', $this->_db->get_col( $query ) );
-		} elseif ( $taxonomy === array( 'link', ) ) {
-			$array_arguments['exclude'] = implode( ',', $this->_db->get_col( $query ) );
-		} else {
-			$array_arguments['exclude'] = $this->_db->get_col( $query );
+		$key = 'exclude';
+		if ( $taxonomy == array( 'link_category', ) && $is_different_key ) {
+			$key = 'exclude_category';
 		}
+		$array_arguments[$key] = implode( ',', $this->_db->get_col( $query ) );
 
 		return $array_arguments;
 	}
