@@ -1,5 +1,5 @@
 === Exclude Pages, Tags, Posts, Links & Categories (integrate with WiziApp powered mobile Apps) ===
-Contributors: mayerz
+Contributors: wiziapp
 Tags: categories, links, exclude, exclude categories, exclude pages, exclude posts, exclude tags, hide, pages, posts, tags, exclude links
 Requires at least: 3.4
 Tested up to: 3.8.1
