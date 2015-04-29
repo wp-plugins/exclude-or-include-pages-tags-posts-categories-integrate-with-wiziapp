@@ -2,7 +2,7 @@
 Contributors: wiziapp
 Tags: categories, links, exclude, exclude categories, exclude pages, exclude posts, exclude tags, hide, pages, posts, tags, exclude links
 Requires at least: 3.4
-Tested up to: 4.1
+Tested up to: 4.2
 Stable tag: 1.0.9
 License: GPLv2
 
